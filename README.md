@@ -134,42 +134,6 @@ npx hardhat run scripts/deploy.ts --network sepolia
 
 ---
 
-## 🗂 Folder Structure
 
-```
-web3.dapps/
-├── contracts/              # Smart Contracts (Solidity + Hardhat)
-│   ├── contracts/          # Solidity Contracts
-│   ├── scripts/            # Deployment Scripts
-│   ├── test/               # Unit Tests
-│   └── hardhat.config.ts   # Hardhat Config
-│
-├── frontend/               # Next.js Web Frontend
-│   ├── components/         # Reusable UI Components
-│   ├── hooks/              # Custom Hooks
-│   ├── pages/              # Routes and Views
-│   ├── public/             # Static Files
-│   ├── styles/             # CSS / Styling
-│   ├── wagmi/              # Wallet Config & Providers
-│   └── utils/              # Utility Functions
-│
-├── backend/                # NestJS API Backend
-│   ├── src/
-│   │   ├── modules/        # Features (e.g. User, Transactions)
-│   │   ├── database/       # DB Connection
-│   │   ├── services/       # Business Logic
-│   │   ├── main.ts         # App Entry Point
-│   │   └── app.module.ts   # Root Module
-│   └── .env                # Backend Environment Variables
-│
-├── subgraph/               # The Graph (Optional)
-│   ├── schema.graphql      # GraphQL Schema
-│   ├── subgraph.yaml       # Subgraph Configuration
-│   └── mappings/           # Event Handlers
-
-├── .env                    # Global Environment Variables
-├── package.json            # Monorepo Root
-└── README.md               # Project Documentation
-```
 
 
