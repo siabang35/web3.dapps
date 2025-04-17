@@ -42,3 +42,142 @@ To run this project, make sure you have the following installed:
 - [Alchemy or Infura](https://www.alchemy.com/) (for RPC URL)
 - [PostgreSQL](https://www.postgresql.org/) for database storage
 
+  # 🧠 Web3 dApps Monorepo
+
+Full-stack Web3 decentralized application built using:
+- **Smart Contracts** with Hardhat & Solidity  
+- **Frontend** using Next.js, TypeScript, and Wagmi  
+- **Backend API** with NestJS and PostgreSQL (Supabase)
+
+---
+
+## 📦 Install Dependencies
+
+Jalankan perintah berikut di direktori root dan di dalam setiap folder (`backend`, `frontend`, `contracts`):
+
+```bash
+npm install
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek secara lokal.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/siabang35/web3.dapps.git
+cd web3.dapps
+```
+
+---
+
+### 2. Setup Backend (NestJS)
+
+```bash
+cd backend
+npm install
+```
+
+Buat file `.env` di dalam folder `backend`:
+
+```
+DATABASE_URL=postgres://your_user:your_password@your_host:5432/your_db
+RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+PRIVATE_KEY=your_private_key_without_0x
+```
+
+Jalankan server backend:
+
+```bash
+npm run start
+```
+
+---
+
+### 3. Setup Frontend (Next.js)
+
+```bash
+cd ../frontend
+npm install
+```
+
+- Konfigurasi integrasi wallet (MetaMask, WalletConnect, dll) di folder `wagmi`.
+
+Jalankan development server:
+
+```bash
+npm run dev
+```
+
+---
+
+### 4. Smart Contracts Development (Hardhat)
+
+```bash
+cd ../contracts
+npm install
+```
+
+Buat file `.env`:
+
+```
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+PRIVATE_KEY=your_private_key_without_0x
+```
+
+Compile smart contracts:
+
+```bash
+npx hardhat compile
+```
+
+Deploy ke jaringan Sepolia:
+
+```bash
+npx hardhat run scripts/deploy.ts --network sepolia
+```
+
+---
+
+## 🗂 Folder Structure
+
+```
+web3.dapps/
+├── contracts/              # Smart Contracts (Solidity + Hardhat)
+│   ├── contracts/          # Solidity Contracts
+│   ├── scripts/            # Deployment Scripts
+│   ├── test/               # Unit Tests
+│   └── hardhat.config.ts   # Hardhat Config
+│
+├── frontend/               # Next.js Web Frontend
+│   ├── components/         # Reusable UI Components
+│   ├── hooks/              # Custom Hooks
+│   ├── pages/              # Routes and Views
+│   ├── public/             # Static Files
+│   ├── styles/             # CSS / Styling
+│   ├── wagmi/              # Wallet Config & Providers
+│   └── utils/              # Utility Functions
+│
+├── backend/                # NestJS API Backend
+│   ├── src/
+│   │   ├── modules/        # Features (e.g. User, Transactions)
+│   │   ├── database/       # DB Connection
+│   │   ├── services/       # Business Logic
+│   │   ├── main.ts         # App Entry Point
+│   │   └── app.module.ts   # Root Module
+│   └── .env                # Backend Environment Variables
+│
+├── subgraph/               # The Graph (Optional)
+│   ├── schema.graphql      # GraphQL Schema
+│   ├── subgraph.yaml       # Subgraph Configuration
+│   └── mappings/           # Event Handlers
+
+├── .env                    # Global Environment Variables
+├── package.json            # Monorepo Root
+└── README.md               # Project Documentation
+```
+
+
