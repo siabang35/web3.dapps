@@ -42,14 +42,6 @@ To run this project, make sure you have the following installed:
 - [Alchemy or Infura](https://www.alchemy.com/) (for RPC URL)
 - [PostgreSQL](https://www.postgresql.org/) for database storage
 
-  # 🧠 Web3 dApps Monorepo
-
-Full-stack Web3 decentralized application built using:
-- **Smart Contracts** with Hardhat & Solidity  
-- **Frontend** using Next.js, TypeScript, and Wagmi  
-- **Backend API** with NestJS and PostgreSQL (Supabase)
-
----
 
 ## 📦 Install Dependencies
 
