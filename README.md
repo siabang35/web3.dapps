@@ -42,137 +42,98 @@ To run this project, make sure you have the following installed:
 - [Alchemy or Infura](https://www.alchemy.com/) (for RPC URL)
 - [PostgreSQL](https://www.postgresql.org/) for database storage
 
-You can install required dependencies with:
+
+## 📦 Install Dependencies
+
+Jalankan perintah berikut di direktori root dan di dalam setiap folder (`backend`, `frontend`, `contracts`):
 
 ```bash
 npm install
+```
+
 ---
-## Setup Instructions
-Follow these steps to set up the project locally.
 
-1. Clone the Repository
-Clone this repository to your local machine:
+## ⚙️ Setup Instructions
 
+Ikuti langkah-langkah berikut untuk menjalankan proyek secara lokal.
 
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/siabang35/web3.dapps.git
 cd web3.dapps
-2. Setup Backend (NestJS)
-a. Navigate to the backend folder:
+```
 
+---
+
+### 2. Setup Backend (NestJS)
+
+```bash
 cd backend
-b. Install the dependencies:
-
 npm install
-c. Set up the PostgreSQL database in Supabase and create a .env file with the database URL:
+```
 
+Buat file `.env` di dalam folder `backend`:
+
+```
 DATABASE_URL=postgres://your_user:your_password@your_host:5432/your_db
 RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
 PRIVATE_KEY=your_private_key_without_0x
-d. Run the server:
+```
 
+Jalankan server backend:
 
+```bash
 npm run start
-3. Setup Frontend (Next.js)
-a. Navigate to the frontend folder:
+```
 
-cd frontend
-b. Install the dependencies:
+---
 
+### 3. Setup Frontend (Next.js)
 
+```bash
+cd ../frontend
 npm install
-c. Configure wallet integration with Wagmi in the frontend by setting up the wallet provider in wagmi folder.
+```
 
-d. Run the development server:
+- Konfigurasi integrasi wallet (MetaMask, WalletConnect, dll) di folder `wagmi`.
 
+Jalankan development server:
 
+```bash
 npm run dev
-4. Smart Contracts Development (Hardhat)
-a. Navigate to the contracts folder:
+```
 
+---
 
-cd contracts
-b. Install dependencies for Hardhat and ethers.js:
+### 4. Smart Contracts Development (Hardhat)
 
-
+```bash
+cd ../contracts
 npm install
-c. Edit .env to add Alchemy or Infura Sepolia RPC URL and Private Key:
+```
 
+Buat file `.env`:
 
+```
 SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
 PRIVATE_KEY=your_private_key_without_0x
-d. Compile the smart contracts:
+```
 
+Compile smart contracts:
 
+```bash
 npx hardhat compile
-e. Deploy the smart contracts to Sepolia network (ensure you have Sepolia ETH in your wallet for testing):
+```
 
+Deploy ke jaringan Sepolia:
 
+```bash
 npx hardhat run scripts/deploy.ts --network sepolia
+```
+
 ---
-## Folder Structure
-Here’s a breakdown of the folder structure:
 
 
-C:\Users\wilda\OneDrive\Documents\Web3\dapps
-├── contracts/              # Smart Contracts (Solidity + Hardhat)
-│   ├── contracts/          # Solidity Contracts
-│   ├── scripts/            # Deployment Scripts
-│   ├── test/               # Unit Tests for Smart Contracts
-│   └── hardhat.config.ts   # Hardhat Configuration
-│
-├── frontend/               # Web Interface (Next.js + TypeScript)
-│   ├── components/         # Reusable UI components
-│   ├── hooks/              # Custom hooks (e.g. Wallet)
-│   ├── pages/              # Next.js pages
-│   ├── public/             # Static assets (images, etc.)
-│   ├── styles/             # CSS & styling
-│   ├── wagmi/              # Wallet & Web3 config
-│   └── utils/              # Utility functions
-│
-├── backend/                # Backend API (NestJS + PostgreSQL)
-│   ├── src/
-│   │   ├── modules/        # Features (e.g. User, Transactions)
-│   │   ├── database/       # Database connection
-│   │   ├── services/       # Business logic
-│   │   ├── main.ts         # Entry point
-│   │   └── app.module.ts   # Main module
-│   └── .env                # Environment variables
-│
-├── subgraph/               # The Graph (optional)
-│   ├── schema.graphql      # GraphQL schema
-│   ├── subgraph.yaml       # Subgraph configuration
-│   └── mappings/           # Event handling for subgraph
-│
-├── .env                    # Global env (if needed)
-├── package.json            # Monorepo root
-└── README.md               # Project documentation
-Smart Contract Development
-Smart contracts are written in Solidity and managed with Hardhat. Follow these steps to develop, test, and deploy contracts.
-
-## Smart Contract Deployment
-a. Write contracts in the contracts/ directory.
-
-b. Test contracts using Hardhat:
-
-npx hardhat test
-c. Deploy to the Sepolia testnet:
 
 
-npx hardhat run scripts/deploy.ts --network sepolia
-### Frontend Development
-The frontend is built with Next.js and TypeScript. The interface is integrated with the smart contracts via Wagmi (for wallet connection and blockchain interaction).
-
-a. Modify the wagmi folder to set up wallet providers (e.g., MetaMask).
-
-b. Customize components inside components/ for UI.
-
-c. Use hooks for interacting with the blockchain (e.g., sending transactions).
-
-### Backend Development
-a. The backend is built with NestJS and connects to PostgreSQL via Supabase. It stores data like user transactions, wallets, and tokens.
-
-b. Set up models using TypeORM.
-
-c. Use REST API to interact with the frontend and smart contracts.
-
-Configure database connection in .env.

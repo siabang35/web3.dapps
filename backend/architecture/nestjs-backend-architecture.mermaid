@@ -1,0 +1,25 @@
+graph TD
+    A["Frontend (Next.js)"] -->|API Requests| B["NestJS Backend"]
+    B -->|Database Operations| C["PostgreSQL (Supabase)"]
+    B -->|Blockchain Interactions| D["Ethereum Network"]
+    B -->|GraphQL Queries| E["The Graph (Subgraph)"]
+    
+    subgraph "NestJS Modules"
+        F["Auth Module"] --> B
+        G["Users Module"] --> B
+        H["Tokens Module"] --> B
+        I["Swaps Module"] --> B
+        J["Stakes Module"] --> B
+        K["Portfolio Module"] --> B
+        L["Web3 Module"] --> B
+        M["Subgraph Module"] --> B
+    end
+    
+    subgraph "Database Entities"
+        N["User Entity"] --> C
+        O["Token Entity"] --> C
+        P["Swap Entity"] --> C
+        Q["Stake Entity"] --> C
+    end
+    
+    D -->|Events| E
