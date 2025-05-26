@@ -1,145 +1,104 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Fungsi untuk menangani login dengan wallet
-export async function POST(request: NextRequest) {
-  // Extract the route parameters from the URL
-  const url = new URL(request.url)
-  const pathSegments = url.pathname.split("/")
-  const authIndex = pathSegments.findIndex((segment) => segment === "auth")
-  const authType = pathSegments[authIndex + 1] // Get the first parameter after 'auth'
+const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
 
-  if (authType === "web3-login") {
-    try {
+// POST Handler
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { nextauth: string[] } }
+) {
+  const authType = params.nextauth?.[0]
+
+  try {
+    if (authType === "web3-login") {
       const { walletAddress, signature, nonce } = await request.json()
-
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
       const response = await fetch(`${backendUrl}/auth/web3-login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ walletAddress, signature, nonce }),
       })
 
+      const data = await response.json()
       if (!response.ok) {
-        const error = await response.json()
-        return NextResponse.json({ error: error.message || "Authentication failed" }, { status: response.status })
+        return NextResponse.json(
+          { error: data.message || "Authentication failed" },
+          { status: response.status }
+        )
       }
 
-      const data = await response.json()
       return NextResponse.json(data)
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }
-  } else if (authType === "login") {
-    try {
-      const { email, password } = await request.json()
 
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
+    if (authType === "login") {
+      const { email, password } = await request.json()
       const response = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
 
+      const data = await response.json()
       if (!response.ok) {
-        const error = await response.json()
-        return NextResponse.json({ error: error.message || "Authentication failed" }, { status: response.status })
+        return NextResponse.json(
+          { error: data.message || "Authentication failed" },
+          { status: response.status }
+        )
       }
 
-      const data = await response.json()
       return NextResponse.json(data)
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }
-  } else if (authType === "register") {
-    try {
-      const { email, password, username } = await request.json()
 
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
+    if (authType === "register") {
+      const { email, password, username } = await request.json()
       const response = await fetch(`${backendUrl}/auth/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, username }),
       })
 
-      if (!response.ok) {
-        const error = await response.json()
-        return NextResponse.json({ error: error.message || "Registration failed" }, { status: response.status })
-      }
-
       const data = await response.json()
-      return NextResponse.json(data)
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
-    }
-  } else if (authType === "profile") {
-    try {
-      const authHeader = request.headers.get("Authorization")
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-
-      const token = authHeader.split(" ")[1]
-
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
-      const response = await fetch(`${backendUrl}/auth/profile`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
       if (!response.ok) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        return NextResponse.json(
+          { error: data.message || "Registration failed" },
+          { status: response.status }
+        )
       }
 
-      const data = await response.json()
       return NextResponse.json(data)
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }
-  } else if (authType === "nonce") {
-    try {
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
+
+    if (authType === "nonce") {
       const response = await fetch(`${backendUrl}/auth/nonce`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       })
 
+      const data = await response.json()
       if (!response.ok) {
-        const error = await response.json()
-        return NextResponse.json({ error: error.message || "Failed to get nonce" }, { status: response.status })
+        return NextResponse.json(
+          { error: data.message || "Failed to get nonce" },
+          { status: response.status }
+        )
       }
 
-      const data = await response.json()
       return NextResponse.json(data)
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }
-  }
 
-  return NextResponse.json({ error: "Invalid auth endpoint" }, { status: 400 })
+    return NextResponse.json({ error: "Invalid auth endpoint" }, { status: 400 })
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Internal server error" },
+      { status: 500 }
+    )
+  }
 }
 
-// Add GET method if needed
-export async function GET(request: NextRequest) {
-  // Extract the route parameters from the URL
-  const url = new URL(request.url)
-  const pathSegments = url.pathname.split("/")
-  const authIndex = pathSegments.findIndex((segment) => segment === "auth")
-  const authType = pathSegments[authIndex + 1] // Get the first parameter after 'auth'
+// GET Handler
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { nextauth: string[] } }
+) {
+  const authType = params.nextauth?.[0]
 
   if (authType === "profile") {
     try {
@@ -150,23 +109,22 @@ export async function GET(request: NextRequest) {
 
       const token = authHeader.split(" ")[1]
 
-      // Kirim data ke backend NestJS
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
       const response = await fetch(`${backendUrl}/auth/profile`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
 
+      const data = await response.json()
       if (!response.ok) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
       }
 
-      const data = await response.json()
       return NextResponse.json(data)
     } catch (error: any) {
-      return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
+      return NextResponse.json(
+        { error: error.message || "Internal server error" },
+        { status: 500 }
+      )
     }
   }
 
