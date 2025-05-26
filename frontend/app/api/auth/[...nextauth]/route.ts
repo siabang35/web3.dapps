@@ -1,8 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Add this configuration for static export
+// Optimized for Vercel deployment
 export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
+
+// CORS headers for better compatibility
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+}
 
 // TypeScript interfaces
 interface User {
@@ -84,6 +91,14 @@ function isValidUsername(username: string): boolean {
   return username.length >= 3 && username.length <= 20 && /^[a-zA-Z0-9_]+$/.test(username)
 }
 
+// OPTIONS handler for CORS
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: corsHeaders,
+  })
+}
+
 // POST handler - explicitly typed to avoid params issue
 export const POST = async (request: NextRequest): Promise<NextResponse> => {
   const authType = getAuthType(request)
@@ -98,21 +113,21 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!body.walletAddress || !body.signature || !body.nonce) {
           return NextResponse.json(
             { error: "Missing required fields: walletAddress, signature, and nonce are required" },
-            { status: 400 },
+            { status: 400, headers: corsHeaders },
           )
         }
 
         // Validate formats
         if (!isValidEthereumAddress(body.walletAddress)) {
-          return NextResponse.json({ error: "Invalid Ethereum address format" }, { status: 400 })
+          return NextResponse.json({ error: "Invalid Ethereum address format" }, { status: 400, headers: corsHeaders })
         }
 
         if (!isValidSignature(body.signature)) {
-          return NextResponse.json({ error: "Invalid signature format" }, { status: 400 })
+          return NextResponse.json({ error: "Invalid signature format" }, { status: 400, headers: corsHeaders })
         }
 
         if (!isValidNonce(body.nonce)) {
-          return NextResponse.json({ error: "Invalid nonce format" }, { status: 400 })
+          return NextResponse.json({ error: "Invalid nonce format" }, { status: 400, headers: corsHeaders })
         }
 
         const response = await fetch(`${backendUrl}/auth/web3-login`, {
@@ -132,11 +147,11 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Web3 authentication failed" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data as AuthResponse, { status: 200 })
+        return NextResponse.json(data as AuthResponse, { status: 200, headers: corsHeaders })
       }
 
       case "login": {
@@ -144,17 +159,23 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
 
         // Validate required fields
         if (!body.email || !body.password) {
-          return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
+          return NextResponse.json({ error: "Email and password are required" }, { status: 400, headers: corsHeaders })
         }
 
         // Validate email format
         if (!isValidEmail(body.email)) {
-          return NextResponse.json({ error: "Please provide a valid email address" }, { status: 400 })
+          return NextResponse.json(
+            { error: "Please provide a valid email address" },
+            { status: 400, headers: corsHeaders },
+          )
         }
 
         // Validate password length
         if (body.password.length < 6) {
-          return NextResponse.json({ error: "Password must be at least 6 characters long" }, { status: 400 })
+          return NextResponse.json(
+            { error: "Password must be at least 6 characters long" },
+            { status: 400, headers: corsHeaders },
+          )
         }
 
         const response = await fetch(`${backendUrl}/auth/login`, {
@@ -173,11 +194,11 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Authentication failed" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data as AuthResponse, { status: 200 })
+        return NextResponse.json(data as AuthResponse, { status: 200, headers: corsHeaders })
       }
 
       case "register": {
@@ -185,24 +206,33 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
 
         // Validate required fields
         if (!body.email || !body.password || !body.username) {
-          return NextResponse.json({ error: "Email, password, and username are required" }, { status: 400 })
+          return NextResponse.json(
+            { error: "Email, password, and username are required" },
+            { status: 400, headers: corsHeaders },
+          )
         }
 
         // Validate email format
         if (!isValidEmail(body.email)) {
-          return NextResponse.json({ error: "Please provide a valid email address" }, { status: 400 })
+          return NextResponse.json(
+            { error: "Please provide a valid email address" },
+            { status: 400, headers: corsHeaders },
+          )
         }
 
         // Validate password length
         if (body.password.length < 6 || body.password.length > 50) {
-          return NextResponse.json({ error: "Password must be between 6 and 50 characters long" }, { status: 400 })
+          return NextResponse.json(
+            { error: "Password must be between 6 and 50 characters long" },
+            { status: 400, headers: corsHeaders },
+          )
         }
 
         // Validate username
         if (!isValidUsername(body.username)) {
           return NextResponse.json(
             { error: "Username must be 3-20 characters and contain only letters, numbers, and underscores" },
-            { status: 400 },
+            { status: 400, headers: corsHeaders },
           )
         }
 
@@ -223,11 +253,11 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Registration failed" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data as RegisterResponse, { status: 201 })
+        return NextResponse.json(data as RegisterResponse, { status: 201, headers: corsHeaders })
       }
 
       case "nonce": {
@@ -243,11 +273,11 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Failed to generate nonce" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data as NonceResponse, { status: 200 })
+        return NextResponse.json(data as NonceResponse, { status: 200, headers: corsHeaders })
       }
 
       case "refresh-token": {
@@ -255,12 +285,12 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
 
         // Validate required fields
         if (!body.refreshToken) {
-          return NextResponse.json({ error: "Refresh token is required" }, { status: 400 })
+          return NextResponse.json({ error: "Refresh token is required" }, { status: 400, headers: corsHeaders })
         }
 
         // Validate refresh token format
         if (typeof body.refreshToken !== "string" || body.refreshToken.trim().length === 0) {
-          return NextResponse.json({ error: "Invalid refresh token format" }, { status: 400 })
+          return NextResponse.json({ error: "Invalid refresh token format" }, { status: 400, headers: corsHeaders })
         }
 
         const response = await fetch(`${backendUrl}/auth/refresh-token`, {
@@ -278,19 +308,19 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Failed to refresh token" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data, { status: 200 })
+        return NextResponse.json(data, { status: 200, headers: corsHeaders })
       }
 
       default:
-        return NextResponse.json({ error: "Invalid auth endpoint" }, { status: 400 })
+        return NextResponse.json({ error: "Invalid auth endpoint" }, { status: 400, headers: corsHeaders })
     }
   } catch (error: any) {
     console.error(`Auth ${authType} error:`, error)
-    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500, headers: corsHeaders })
   }
 }
 
@@ -305,13 +335,13 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
         const authHeader = request.headers.get("Authorization")
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-          return NextResponse.json({ error: "Authorization header is required" }, { status: 401 })
+          return NextResponse.json({ error: "Authorization header is required" }, { status: 401, headers: corsHeaders })
         }
 
         const token = authHeader.split(" ")[1]
 
         if (!token) {
-          return NextResponse.json({ error: "Invalid authorization token" }, { status: 401 })
+          return NextResponse.json({ error: "Invalid authorization token" }, { status: 401, headers: corsHeaders })
         }
 
         const response = await fetch(`${backendUrl}/auth/profile`, {
@@ -327,18 +357,21 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
         if (!response.ok) {
           return NextResponse.json(
             { error: data.message || data.error || "Failed to fetch profile" },
-            { status: response.status },
+            { status: response.status, headers: corsHeaders },
           )
         }
 
-        return NextResponse.json(data as User, { status: 200 })
+        return NextResponse.json(data as User, { status: 200, headers: corsHeaders })
       }
 
       default:
-        return NextResponse.json({ error: "Invalid auth endpoint for GET method" }, { status: 400 })
+        return NextResponse.json(
+          { error: "Invalid auth endpoint for GET method" },
+          { status: 400, headers: corsHeaders },
+        )
     }
   } catch (error: any) {
     console.error(`Auth GET ${authType} error:`, error)
-    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500, headers: corsHeaders })
   }
 }
