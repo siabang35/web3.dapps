@@ -1,9 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 // Fungsi untuk menangani login dengan wallet
-export async function POST(request: NextRequest, { params }: { params: Promise<{ nextauth: string[] }> }) {
-  const resolvedParams = await params
-  const authType = resolvedParams.nextauth[0]
+export async function POST(request: NextRequest) {
+  // Extract the route parameters from the URL
+  const url = new URL(request.url)
+  const pathSegments = url.pathname.split("/")
+  const authIndex = pathSegments.findIndex((segment) => segment === "auth")
+  const authType = pathSegments[authIndex + 1] // Get the first parameter after 'auth'
 
   if (authType === "web3-login") {
     try {
@@ -131,9 +134,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 }
 
 // Add GET method if needed
-export async function GET(request: NextRequest, { params }: { params: Promise<{ nextauth: string[] }> }) {
-  const resolvedParams = await params
-  const authType = resolvedParams.nextauth[0]
+export async function GET(request: NextRequest) {
+  // Extract the route parameters from the URL
+  const url = new URL(request.url)
+  const pathSegments = url.pathname.split("/")
+  const authIndex = pathSegments.findIndex((segment) => segment === "auth")
+  const authType = pathSegments[authIndex + 1] // Get the first parameter after 'auth'
 
   if (authType === "profile") {
     try {
