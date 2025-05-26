@@ -11,8 +11,7 @@ export class User {
   @Column({ unique: true, nullable: true })
   walletAddress: string;
 
-
-  @Column({ nullable: true })
+  @Column({ unique: true, nullable: true })
   email: string;
 
   @Column({ nullable: true })
@@ -27,6 +26,20 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ nullable: true })
+  @Exclude()
+  refreshToken: string;
+
+  @Column({ default: false })
+  isEmailVerified: boolean;
+
+  @Column({ nullable: true })
+  @Exclude()
+  verificationToken: string;
+
+  @Column({ nullable: true })
+  verificationTokenExpiry: Date;
 
   @OneToMany(() => Swap, swap => swap.user)
   swaps: Swap[];

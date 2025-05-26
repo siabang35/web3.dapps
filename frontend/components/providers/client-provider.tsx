@@ -1,10 +1,11 @@
 'use client';
 
+import * as React from 'react';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Web3Provider } from '@/components/providers/web3-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { AuthProvider } from "@/contexts/auth-context";
 import { Toaster } from '@/components/ui/toaster';
-import * as React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export interface ClientProvidersProps {
@@ -20,7 +21,9 @@ export function ClientProviders({ children }: ClientProvidersProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return <div suppressHydrationWarning />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -32,10 +35,12 @@ export function ClientProviders({ children }: ClientProvidersProps) {
       >
         <Web3Provider>
           <TooltipProvider>
-            {children}
-            <Toaster />
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </TooltipProvider>
         </Web3Provider>
+        <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
   );
