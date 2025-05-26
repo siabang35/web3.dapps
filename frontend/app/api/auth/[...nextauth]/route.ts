@@ -80,7 +80,8 @@ function isValidUsername(username: string): boolean {
   return username.length >= 3 && username.length <= 20 && /^[a-zA-Z0-9_]+$/.test(username)
 }
 
-export async function POST(request: NextRequest) {
+// POST handler - explicitly typed to avoid params issue
+export const POST = async (request: NextRequest): Promise<NextResponse> => {
   const authType = getAuthType(request)
   const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
 
@@ -289,7 +290,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+// GET handler - explicitly typed to avoid params issue
+export const GET = async (request: NextRequest): Promise<NextResponse> => {
   const authType = getAuthType(request)
   const backendUrl = process.env.BACKEND_URL || "http://localhost:3001"
 
