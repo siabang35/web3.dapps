@@ -3,7 +3,7 @@
 import { DynamicIcon } from 'lucide-react/dynamic';
 import * as ResizablePrimitive from 'react-resizable-panels';
 
-import { cn } from '@/utils/utils';
+import { cn } from "@/lib/utils"
 
 const ResizablePanelGroup = ({
   className,
