@@ -1,5 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+// Add this configuration for static export
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
+
 // TypeScript interfaces
 interface User {
   id: string
