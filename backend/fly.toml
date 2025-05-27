@@ -1,0 +1,41 @@
+app = "web3-backend"    # ganti dengan nama app kamu di fly.io
+
+# Pakai region sin (Singapore), bisa diganti region lain
+primary_region = "sin"
+
+[build]
+  # Jalankan build dari folder backend
+  dir = "backend"
+  # Jika kamu pakai Dockerfile di backend/
+  # Uncomment baris ini jika ingin build via dockerfile
+  # dockerfile = "Dockerfile"
+
+[deploy]
+  # Gunakan dir backend sebagai root untuk deploy
+  dir = "backend"
+
+[env]
+  # Contoh environment variables
+  NODE_ENV = "production"
+  # Tambahkan variabel lain jika perlu
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[services]
+  [[services.http]]
+    internal_port = 3000   # Port aplikasi NestJS default
+    protocol = "tcp"
+
+    [[services.http.ports]]
+      port = 80
+      handlers = ["http"]
+
+    [[services.http.ports]]
+      port = 443
+      handlers = ["tls", "http"]
+
+  [[services.tcp]]
+    internal_port = 3000
+    port = 22
